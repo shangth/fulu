@@ -1,24 +1,31 @@
 <template>
     <div class="hello">
+        <div class="bar">
+            <span>主页</span>
+            <span>愿望选择</span>
+            <span>游戏学习</span>
+            <span>详细介绍</span>
+        </div>
         <div class="left">
-            <div 
-                class="item" v-for="(item,index) in imgArr" 
+            <div
+                class="item" v-for="(item,index) in imgArr"
                 :key="index"
+                @click="changeCurrent(index)"
             >
-                <img :src="item.url" alt="">
-                <div class="btn" @click="changeCurrent(index)">{{item.name}}</div>
+                <img :src="item.url" alt="" >
+                <div class="btn" >{{item.name}}</div>
             </div>
         </div>
         <div class="mid" @mousemove="move($event)">
-            <div 
-                class="content" 
-                v-for="(item, index) in imgArr" :key="index" 
+            <div
+                class="content"
+                v-for="(item, index) in imgArr" :key="index"
                 v-show="current === index"
             >
-                <canvas 
-                    class='origin' :ref="'canvas' + index" 
+                <canvas
+                    class='origin' :ref="'canvas' + index"
                     :width="canvasWidth" :height="canvasHeight"
-                    :style="{width: canvasWidth + 'px', height: canvasHeight + 'px'}" 
+                    :style="{width: canvasWidth + 'px', height: canvasHeight + 'px'}"
                 />
                 <div class="border" :style="{
                     width: penWidth + 'px',
@@ -26,44 +33,44 @@
                     top: borderY + 'px',
                     left: borderX + 'px',
                     borderRadius: erasering ? '0' : '50%'}"></div>
-                <canvas 
-                    :ref="'canvas_' + index " 
-                    :width="canvasWidth" :height="canvasHeight" 
-                    @mousedown="mousedown($event)" 
+                <canvas
+                    :ref="'canvas_' + index "
+                    :width="canvasWidth" :height="canvasHeight"
+                    @mousedown="mousedown($event)"
                     @mousemove="mousemove($event)"
                     :style="{width: canvasWidth + 'px', height: canvasHeight + 'px'}"
                 />
             </div>
         </div>
         <div class="right">
-            <button class="eraser" @click="eraser">
-                {{erasering ? 'PEN' : 'ERASER'}}
-            </button>
-            <button class="clear" @click="clear">
-                CLEAR ALL
-            </button>
-            <button @click="getScore">
-                CLICK ME GOT SCORE
-            </button>
-            <div>
-                YOUR SCORE IS 
-                <span class="red">
-                    {{score}}
-                </span>
-            </div>
             <div class="pen-color">
-                LINE COLOR
-                <input type="color" name="color" ref="color" v-model="color">
+                线条颜色：
+                <input class="color-input" type="color" name="color" ref="color" v-model="color">
             </div>
             <div class="pen-width">
-                BRUSH SIZE
+                线条粗细：
                 <div class="xi" @click="xi">-</div>
                 {{penWidth}}
                 <div class="cu" @click="cu">＋</div>
             </div>
+            <button class="get-score" @click="getScore">
+                点我出成绩
+            </button>
+            <div class="score">
+                我的得分：
+                <span class="span">{{score}}</span>
+            </div>
+            <div class="btn-group">
+                <button class="eraser" @click="eraser">
+                    {{erasering ? '画笔' : '橡皮'}}
+                </button>
+                <button class="clear" @click="clear">
+                    清除全部
+                </button>
+            </div>
             <div class="save" @click="save">
-                <img src="../assets/save.png" alt="">
-                <span>CLICK ME TO SAVE</span> 
+                <!-- <img src="../assets/save.png" alt=""> -->
+                <span>保存图片</span>
             </div>
         </div>
     </div>
@@ -83,7 +90,7 @@ export default {
             x: 0,
             y: 0,
             score: 0,
-            canvasWidth: 200,
+            canvasWidth: 100,
             canvasHeight: 200,
             ctx: null,
             ctx2: null,
@@ -91,10 +98,10 @@ export default {
             penWidth: 8,
             color: "#ff0000",
             imgArr: [
-                {url: img1_, name: 'TRVAL SAFE'}, 
-                {url: img2_, name: 'HOUSE PROTECTION'}, 
-                {url: img3_, name: 'PROMOTION OPPORTUNITY'}, 
-                {url: img4_, name: 'GOOD FORTUNE'}
+                {url: img1_, name: '出行平安符'},
+                {url: img2_, name: '家宅安宁符'},
+                {url: img3_, name: '好感增加符'},
+                {url: img4_, name: '好运降临符'}
             ],
             current: 0,
             borderX: 0,
@@ -182,11 +189,11 @@ export default {
                 return
             }
             if (e.target.nodeName === "CANVAS") {
-                this.borderX = e.offsetX + 246.5
-                this.borderY = e.offsetY + 50
+                this.borderX = e.offsetX + 186.5
+                this.borderY = e.offsetY + 66
             } else {
-                this.borderX = e.offsetX 
-                this.borderY = e.offsetY 
+                this.borderX = e.offsetX
+                this.borderY = e.offsetY
             }
         },
         getScore() {
@@ -282,17 +289,39 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="less" scoped>
+@font-face {
+     font-family: 'zf';
+     src:  url('../assets/font.TTF');
+}
 .hello {
     display: flex;
     color: #fff;
-    background-image: url('../assets/background.png');
+    width: 100vw;
+    height: 100vh;
+    background-image: url('../assets/bg.png');
     justify-content: center;
-    font-size: 18px;
+    align-items: flex-end;
+    font-family: 'zf';
+    position: relative;
+    .bar {
+        width: 100%;
+        position: absolute;
+        top: 30px;
+        height: 50px;
+        background: linear-gradient(90deg, #ca7534 40%, #4c62d9 60%);
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        span {
+            font-size: 30px;
+        }
+    }
     .left {
         flex: 0 0 344px;
         display: flex;
         flex-wrap: wrap;
         margin-top: 10%;
+        padding-bottom: 20px;
         .item {
             flex: 0 0 50%;
             display: flex;
@@ -302,24 +331,29 @@ export default {
             img {
                 width: 62px;
                 height: 228px;
-                background: #ffae00;
+                // background: #fff;
                 margin-bottom: 10px;
             }
             .btn {
                 width: 138px;
-                height: 60px;
-                color: #fff;
+                height: 50px;
+                color: #0d3ced;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                background: #ee0000;
+                background: #ff4a47;
                 border-radius: 10px;
                 text-align: center;
+                font-size: 24px;
             }
         }
     }
     .mid {
-        flex: 0 0 694px;
+        box-sizing: border-box;
+        padding-top: 50px;
+        flex: 0 0 500px;
+        height: 700px;
+        margin: 0 70px;
         .border {
             box-sizing: border-box;
             position: absolute;
@@ -328,9 +362,12 @@ export default {
         }
         .content {
             margin: 0 auto;
-            width: 694px;
-            height: 900px;
-            background-image: url(../assets/fubg.png);
+            width: 500px;
+            height: 635px;
+            align-self: baseline;
+            background-image: url(../assets/mid.png);
+            background-size: contain;
+            background-repeat: no-repeat;
             position: relative;
             canvas {
                 position: absolute;
@@ -342,55 +379,83 @@ export default {
     }
     .right {
         flex: 0 0 300px;
+        font-size: 30px;
         display: flex;
         flex-direction: column;
-        align-items: center;
         justify-content: flex-end;
+        color: #a6b9ff;
         >* {
-            margin-bottom: 18px;
+            margin-bottom: 38px;
+        }
+        .pen-color {
+            .color-input {
+                border: none;
+                outline: none;
+                padding: 0;
+            }
         }
         button {
             height: 50px;
-            background: #e00;
-            color: #fff;
+            background: #86f;
+            color: #000;
             display: flex;
             justify-content: center;
             align-items: center;
             border: none;
-            border-radius: 10px;
             padding: 0 10px;
-            font-size: 18px;
-        }
-        .red {
-            color: #e00;
+            font-size: 30px;
         }
         .pen-width {
             display: flex;
             align-items: center;
         }
+        .get-score {
+            width: 200px;
+            border-radius: 10px;
+            font-family: 'zf';
+            background: #ff4a47;
+            color: #0d3ced;
+        }
+        .score {
+            .span {
+                color: #ef5454;
+            }
+        }
         .xi,.cu {
-            background: #fff;
-            border-radius: 5px;
-            color: #e00;
-            width: 30px;
+            background: #ff7e00;
+            color: #576695;
+            width: 38px;
             font-weight: bold;
             text-align: center;
             margin: 0 3px;
+            line-height: 30px;
+        }
+        .btn-group {
+            display: flex;
+            >* {
+                background: #ff7e00;
+                border-radius: 10px;
+                color: #3761ff;
+                font-family: 'zf';
+            }
+            .eraser {
+                margin-right: 16px;
+            }
         }
         .save {
-            margin-top: 50px;
+            background: #ff4a47;
+            color: #0d3ced;
+            height: 50px;
             display: flex;
-            flex-direction: column;
-            color: #e00;
+            justify-content: center;
             align-items: center;
-            img {
-                width: 100px;
-                margin-bottom: 14px;
-            }
+            width: 200px;
+            border-radius: 10px;
+            margin-bottom: 120px;
         }
     }
     .origin {
-        opacity: 0.2;
+        opacity: 0.4;
     }
 }
 </style>

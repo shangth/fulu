@@ -16,7 +16,13 @@ export default {
 </script>
 
 <style>
-body {
-	background: #000;
+@font-face {
+     font-family: 'zf';
+     src:  url('./assets/font.TTF');
+   }
+* {
+        padding: 0;
+        margin: 0;
 }
+
 </style>
